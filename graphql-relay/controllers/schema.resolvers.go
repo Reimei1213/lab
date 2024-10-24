@@ -12,6 +12,7 @@ import (
 	"github.com/Reimei1213/lab/graphql-relay/interface/presenter"
 	"github.com/Reimei1213/lab/graphql-relay/pkg/graph"
 	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/model"
+	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/pagination"
 )
 
 // Noop is the resolver for the noop field.
@@ -21,7 +22,7 @@ func (r *mutationResolver) Noop(ctx context.Context, input *model.NoopInput) (*m
 
 // Node is the resolver for the node field.
 func (r *queryResolver) Node(ctx context.Context, id string) (model.Node, error) {
-	nodeType, id, err := presenter.DecodeGraphqlID(id)
+	nodeType, id, err := pagination.DecodeGraphqlID(id)
 	if err != nil {
 		slog.Error("failed to decode graphql-relay id", "err", err)
 		return nil, err

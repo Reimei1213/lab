@@ -1,4 +1,4 @@
-package presenter
+package pagination
 
 import (
 	"encoding/base64"
@@ -7,6 +7,14 @@ import (
 
 	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/model"
 )
+
+type NodeType string
+
+type Node interface {
+	GetID() string
+	GetNodeType() NodeType
+	ToGraphqlNode() model.Node
+}
 
 const graphqlIDFormat = "%s:%s" // tableID:id
 
@@ -26,15 +34,23 @@ func DecodeGraphqlID(encodedGraphqlID string) (NodeType, string, error) {
 	return NodeType(result[0]), result[1], nil
 }
 
-func NewConnection(nodes []node, hasNextPage, hasPreviousPage bool) *model.Connection {
+func toGraphqlModels[T Node](nodes []T) []model.Node {
+	res := make([]model.Node, 0, len(nodes))
+	for _, n := range nodes {
+		res = append(res, n.ToGraphqlNode())
+	}
+	return res
+}
+
+func NewConnection[T Node](nodes []T, hasNextPage, hasPreviousPage bool) *model.Connection {
 	return &model.Connection{
-		Edges:    NewEdges(nodes),
-		Nodes:    ToGraphqlModels(nodes),
-		PageInfo: NewPageInfo(nodes, hasNextPage, hasPreviousPage),
+		Edges:    newEdges(nodes),
+		Nodes:    toGraphqlModels(nodes),
+		PageInfo: newPageInfo(nodes, hasNextPage, hasPreviousPage),
 	}
 }
 
-func NewEdges(nodes []node) []*model.Edge {
+func newEdges[T Node](nodes []T) []*model.Edge {
 	res := make([]*model.Edge, 0, len(nodes))
 	for _, n := range nodes {
 		res = append(res, &model.Edge{
@@ -45,7 +61,7 @@ func NewEdges(nodes []node) []*model.Edge {
 	return res
 }
 
-func NewPageInfo(nodes []node, hasNextPage, hasPreviousPage bool) *model.PageInfo {
+func newPageInfo[T Node](nodes []T, hasNextPage, hasPreviousPage bool) *model.PageInfo {
 	if len(nodes) == 0 {
 		return &model.PageInfo{
 			HasPreviousPage: hasPreviousPage,
