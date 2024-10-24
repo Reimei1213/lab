@@ -36,14 +36,14 @@ func (u *User) ToGraphqlNode() model.Node {
 	return model.Node(u.ToGraphqlModel())
 }
 
-func NewUser(u *entity.User) *User {
+func ToUser(u *entity.User) *User {
 	return &User{u}
 }
 
-func NewUsers(us []*entity.User) []*User {
+func ToUsers(us []*entity.User) []*User {
 	res := make([]*User, 0, len(us))
 	for _, u := range us {
-		res = append(res, NewUser(u))
+		res = append(res, ToUser(u))
 	}
 	return res
 }

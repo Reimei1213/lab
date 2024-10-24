@@ -33,7 +33,7 @@ func (c *Card) ToGraphqlModel() *model.Card {
 	return &model.Card{
 		ID:           pagination.EncodeGraphqlID(c.GetNodeType(), c.ID),
 		Title:        c.Title,
-		Status:       NewCardStatus(c.Status),
+		Status:       ToCardStatus(c.Status),
 		AssignedUser: &model.User{ID: userID},
 	}
 }
@@ -42,7 +42,7 @@ func (c *Card) ToGraphqlNode() model.Node {
 	return model.Node(c.ToGraphqlModel())
 }
 
-func NewCardStatus(in entity.CardStatus) model.CardStatus {
+func ToCardStatus(in entity.CardStatus) model.CardStatus {
 	switch in {
 	case entity.CardStatusTodo:
 		return model.CardStatusTodo
@@ -55,14 +55,14 @@ func NewCardStatus(in entity.CardStatus) model.CardStatus {
 	}
 }
 
-func NewCard(c *entity.Card) *Card {
+func ToCard(c *entity.Card) *Card {
 	return &Card{c}
 }
 
-func NewCards(cs []*entity.Card) []*Card {
+func ToCards(cs []*entity.Card) []*Card {
 	res := make([]*Card, 0, len(cs))
 	for _, c := range cs {
-		res = append(res, NewCard(c))
+		res = append(res, ToCard(c))
 	}
 	return res
 }

@@ -24,7 +24,7 @@ func (r *cardResolver) AssignedUser(ctx context.Context, obj *model.Card) (*mode
 	if err != nil {
 		return nil, err
 	}
-	return presenter.NewUser(u).ToGraphqlModel(), nil
+	return presenter.ToUser(u).ToGraphqlModel(), nil
 }
 
 // AddCard is the resolver for the addCard field.

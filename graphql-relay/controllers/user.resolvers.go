@@ -48,7 +48,7 @@ func (r *queryResolver) Users(ctx context.Context, first *int, after *string, la
 		slog.Error("failed to get users", "err", err)
 		return nil, err
 	}
-	return pagination.NewConnection(presenter.NewUsers(res.Users), res.HasNextPage, res.HasPreviousPage), nil
+	return pagination.NewConnection(presenter.ToUsers(res.Users), res.HasNextPage, res.HasPreviousPage), nil
 }
 
 // Cards is the resolver for the cards field.
