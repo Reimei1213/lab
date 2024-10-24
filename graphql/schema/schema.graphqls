@@ -1,0 +1,38 @@
+type Query {
+    node(id: ID!): Node
+}
+
+type Mutation {
+    noop(input: NoopInput): NoopPayload
+}
+
+input NoopInput {
+    clientMutationId: String
+}
+
+type NoopPayload {
+    clientMutationId: String
+}
+
+type PageInfo {
+    hasPreviousPage: Boolean!
+    startCursor: String
+    hasNextPage: Boolean!
+    endCursor: String
+}
+
+interface Node {
+    id: ID!
+}
+
+type Connection {
+    edges: [Edge]
+    nodes: [Node]
+    pageInfo: PageInfo!
+}
+
+type Edge {
+    cursor: String!
+    node: Node!
+}
+

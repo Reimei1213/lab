@@ -1,0 +1,21 @@
+extend type Query {
+    users(first: Int, after: String, last: Int, before: String): Connection!
+}
+
+extend type Mutation {
+    addUser(input: AddUserInput!): AddUserPayload
+}
+
+type User implements Node {
+    id: ID!
+    name: String!
+    cards(first: Int, after: String, last: Int, before: String): Connection!
+}
+
+input AddUserInput {
+    name: String!
+}
+
+type AddUserPayload {
+    id: ID!
+}
