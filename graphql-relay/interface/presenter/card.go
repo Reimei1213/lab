@@ -59,7 +59,7 @@ func ToCard(c *entity.Card) *Card {
 	return &Card{c}
 }
 
-func ToCards(cs []*entity.Card) []*Card {
+func ToCards(cs entity.Cards) []*Card {
 	res := make([]*Card, 0, len(cs))
 	for _, c := range cs {
 		res = append(res, ToCard(c))

@@ -40,7 +40,7 @@ func ToUser(u *entity.User) *User {
 	return &User{u}
 }
 
-func ToUsers(us []*entity.User) []*User {
+func ToUsers(us entity.Users) []*User {
 	res := make([]*User, 0, len(us))
 	for _, u := range us {
 		res = append(res, ToUser(u))
