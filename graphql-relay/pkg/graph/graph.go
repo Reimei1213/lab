@@ -22,6 +22,8 @@ func DecodeGraphqlID(encodedGraphqlID string) (NodeType, string, error) {
 	}
 
 	result := strings.Split(string(graphqlID), ":")
-
+	if len(result) < 2 {
+		return "", "", fmt.Errorf("invalid graphql ID: %s", string(graphqlID))
+	}
 	return NodeType(result[0]), result[1], nil
 }
