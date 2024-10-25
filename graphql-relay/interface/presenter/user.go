@@ -12,7 +12,7 @@ type User struct {
 	*entity.User
 }
 
-var _ Node = (*User)(nil)
+var _ node = (*User)(nil)
 
 func (u *User) GetID() string {
 	return u.ID

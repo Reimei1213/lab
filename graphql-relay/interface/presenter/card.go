@@ -12,7 +12,7 @@ type Card struct {
 	*entity.Card
 }
 
-var _ Node = (*Card)(nil)
+var _ node = (*Card)(nil)
 
 func (c *Card) GetID() string {
 	return c.ID

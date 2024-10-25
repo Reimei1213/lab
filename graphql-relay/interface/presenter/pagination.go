@@ -7,13 +7,13 @@ import (
 
 type NodeType = graph.NodeType
 
-type Node interface {
+type node interface {
 	GetID() string
 	GetNodeType() NodeType
 	ToGraphqlNode() model.Node
 }
 
-func toGraphqlModels[T Node](nodes []T) []model.Node {
+func toGraphqlModels[T node](nodes []T) []model.Node {
 	res := make([]model.Node, 0, len(nodes))
 	for _, n := range nodes {
 		res = append(res, n.ToGraphqlNode())
@@ -21,7 +21,7 @@ func toGraphqlModels[T Node](nodes []T) []model.Node {
 	return res
 }
 
-func NewConnection[T Node](nodes []T, hasNextPage, hasPreviousPage bool) *model.Connection {
+func NewConnection[T node](nodes []T, hasNextPage, hasPreviousPage bool) *model.Connection {
 	return &model.Connection{
 		Edges:    newEdges(nodes),
 		Nodes:    toGraphqlModels(nodes),
@@ -29,7 +29,7 @@ func NewConnection[T Node](nodes []T, hasNextPage, hasPreviousPage bool) *model.
 	}
 }
 
-func newEdges[T Node](nodes []T) []*model.Edge {
+func newEdges[T node](nodes []T) []*model.Edge {
 	res := make([]*model.Edge, 0, len(nodes))
 	for _, n := range nodes {
 		res = append(res, &model.Edge{
@@ -40,7 +40,7 @@ func newEdges[T Node](nodes []T) []*model.Edge {
 	return res
 }
 
-func newPageInfo[T Node](nodes []T, hasNextPage, hasPreviousPage bool) *model.PageInfo {
+func newPageInfo[T node](nodes []T, hasNextPage, hasPreviousPage bool) *model.PageInfo {
 	if len(nodes) == 0 {
 		return &model.PageInfo{
 			HasPreviousPage: hasPreviousPage,
