@@ -11,7 +11,6 @@ import (
 	"github.com/Reimei1213/lab/graphql-relay/interface/presenter"
 	"github.com/Reimei1213/lab/graphql-relay/pkg/graph"
 	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/model"
-	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/pagination"
 )
 
 // AssignedUser is the resolver for the assignedUser field.
@@ -30,7 +29,7 @@ func (r *cardResolver) AssignedUser(ctx context.Context, obj *model.Card) (*mode
 // AddCard is the resolver for the addCard field.
 func (r *mutationResolver) AddCard(ctx context.Context, input model.AddCardInput) (*model.AddCardPayload, error) {
 	if input.UserID != nil {
-		_, userID, err := pagination.DecodeGraphqlID(*input.UserID)
+		_, userID, err := graph.DecodeGraphqlID(*input.UserID)
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +39,7 @@ func (r *mutationResolver) AddCard(ctx context.Context, input model.AddCardInput
 	if err != nil {
 		return nil, err
 	}
-	return &model.AddCardPayload{ID: pagination.EncodeGraphqlID(presenter.NodeTypeCard, id)}, nil
+	return &model.AddCardPayload{ID: graph.EncodeGraphqlID(presenter.NodeTypeCard, id)}, nil
 }
 
 // Cards is the resolver for the cards field.

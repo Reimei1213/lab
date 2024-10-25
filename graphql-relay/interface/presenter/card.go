@@ -2,23 +2,23 @@ package presenter
 
 import (
 	"github.com/Reimei1213/lab/graphql-relay/domain/entity"
+	"github.com/Reimei1213/lab/graphql-relay/pkg/graph"
 	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/model"
-	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/pagination"
 )
 
-const NodeTypeCard pagination.NodeType = "cards"
+const NodeTypeCard NodeType = "cards"
 
 type Card struct {
 	*entity.Card
 }
 
-var _ pagination.Node = (*Card)(nil)
+var _ Node = (*Card)(nil)
 
 func (c *Card) GetID() string {
 	return c.ID
 }
 
-func (c *Card) GetNodeType() pagination.NodeType {
+func (c *Card) GetNodeType() NodeType {
 	return NodeTypeCard
 }
 
@@ -28,10 +28,10 @@ func (c *Card) ToGraphqlModel() *model.Card {
 		return nil
 	}
 	if c.UserID != nil {
-		userID = pagination.EncodeGraphqlID(NodeTypeUser, *c.UserID)
+		userID = graph.EncodeGraphqlID(NodeTypeUser, *c.UserID)
 	}
 	return &model.Card{
-		ID:           pagination.EncodeGraphqlID(c.GetNodeType(), c.ID),
+		ID:           graph.EncodeGraphqlID(c.GetNodeType(), c.ID),
 		Title:        c.Title,
 		Status:       ToCardStatus(c.Status),
 		AssignedUser: &model.User{ID: userID},
