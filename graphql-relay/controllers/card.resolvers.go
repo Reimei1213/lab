@@ -23,13 +23,13 @@ func (r *cardResolver) AssignedUser(ctx context.Context, obj *model.Card) (*mode
 	if err != nil {
 		return nil, err
 	}
-	return presenter.NewUser(u).ToGraphqlModel(), nil
+	return presenter.ToUser(u).ToGraphqlModel(), nil
 }
 
 // AddCard is the resolver for the addCard field.
 func (r *mutationResolver) AddCard(ctx context.Context, input model.AddCardInput) (*model.AddCardPayload, error) {
 	if input.UserID != nil {
-		_, userID, err := presenter.DecodeGraphqlID(*input.UserID)
+		_, userID, err := graph.DecodeGraphqlID(*input.UserID)
 		if err != nil {
 			return nil, err
 		}
@@ -39,7 +39,7 @@ func (r *mutationResolver) AddCard(ctx context.Context, input model.AddCardInput
 	if err != nil {
 		return nil, err
 	}
-	return &model.AddCardPayload{ID: presenter.EncodeGraphqlID(presenter.NodeTypeCard, id)}, nil
+	return &model.AddCardPayload{ID: graph.EncodeGraphqlID(presenter.NodeTypeCard, id)}, nil
 }
 
 // Cards is the resolver for the cards field.

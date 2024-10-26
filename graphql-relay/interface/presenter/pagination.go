@@ -1,51 +1,46 @@
 package presenter
 
 import (
-	"encoding/base64"
-	"fmt"
-	"strings"
-
+	"github.com/Reimei1213/lab/graphql-relay/pkg/graph"
 	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/model"
 )
 
-const graphqlIDFormat = "%s:%s" // tableID:id
+type NodeType = graph.NodeType
 
-func EncodeGraphqlID(nodeType NodeType, id string) string {
-	graphqlID := fmt.Sprintf(graphqlIDFormat, nodeType, id)
-	return base64.StdEncoding.EncodeToString([]byte(graphqlID))
+type node interface {
+	GetID() string
+	GetNodeType() NodeType
+	ToGraphqlNode() model.Node
 }
 
-func DecodeGraphqlID(encodedGraphqlID string) (NodeType, string, error) {
-	graphqlID, err := base64.StdEncoding.DecodeString(encodedGraphqlID)
-	if err != nil {
-		return "", "", err
+func toGraphqlModels[T node](nodes []T) []model.Node {
+	res := make([]model.Node, 0, len(nodes))
+	for _, n := range nodes {
+		res = append(res, n.ToGraphqlNode())
 	}
-
-	result := strings.Split(string(graphqlID), ":")
-
-	return NodeType(result[0]), result[1], nil
+	return res
 }
 
-func NewConnection(nodes []node, hasNextPage, hasPreviousPage bool) *model.Connection {
+func NewConnection[T node](nodes []T, hasNextPage, hasPreviousPage bool) *model.Connection {
 	return &model.Connection{
-		Edges:    NewEdges(nodes),
-		Nodes:    ToGraphqlModels(nodes),
-		PageInfo: NewPageInfo(nodes, hasNextPage, hasPreviousPage),
+		Edges:    newEdges(nodes),
+		Nodes:    toGraphqlModels(nodes),
+		PageInfo: newPageInfo(nodes, hasNextPage, hasPreviousPage),
 	}
 }
 
-func NewEdges(nodes []node) []*model.Edge {
+func newEdges[T node](nodes []T) []*model.Edge {
 	res := make([]*model.Edge, 0, len(nodes))
 	for _, n := range nodes {
 		res = append(res, &model.Edge{
-			Cursor: EncodeGraphqlID(n.GetNodeType(), n.GetID()),
+			Cursor: graph.EncodeGraphqlID(n.GetNodeType(), n.GetID()),
 			Node:   n.ToGraphqlNode(),
 		})
 	}
 	return res
 }
 
-func NewPageInfo(nodes []node, hasNextPage, hasPreviousPage bool) *model.PageInfo {
+func newPageInfo[T node](nodes []T, hasNextPage, hasPreviousPage bool) *model.PageInfo {
 	if len(nodes) == 0 {
 		return &model.PageInfo{
 			HasPreviousPage: hasPreviousPage,
@@ -55,8 +50,8 @@ func NewPageInfo(nodes []node, hasNextPage, hasPreviousPage bool) *model.PageInf
 
 	startNode := nodes[0]
 	endNode := nodes[len(nodes)-1]
-	startCursor := EncodeGraphqlID(startNode.GetNodeType(), startNode.GetID())
-	endCursor := EncodeGraphqlID(endNode.GetNodeType(), endNode.GetID())
+	startCursor := graph.EncodeGraphqlID(startNode.GetNodeType(), startNode.GetID())
+	endCursor := graph.EncodeGraphqlID(endNode.GetNodeType(), endNode.GetID())
 	return &model.PageInfo{
 		HasPreviousPage: hasPreviousPage,
 		StartCursor:     &startCursor,

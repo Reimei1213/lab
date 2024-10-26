@@ -2,6 +2,7 @@ package presenter
 
 import (
 	"github.com/Reimei1213/lab/graphql-relay/domain/entity"
+	"github.com/Reimei1213/lab/graphql-relay/pkg/graph"
 	"github.com/Reimei1213/lab/graphql-relay/pkg/graph/model"
 )
 
@@ -26,7 +27,7 @@ func (u *User) ToGraphqlModel() *model.User {
 		return nil
 	}
 	return &model.User{
-		ID:   EncodeGraphqlID(u.GetNodeType(), u.ID),
+		ID:   graph.EncodeGraphqlID(u.GetNodeType(), u.ID),
 		Name: u.Name,
 	}
 }
@@ -35,14 +36,14 @@ func (u *User) ToGraphqlNode() model.Node {
 	return model.Node(u.ToGraphqlModel())
 }
 
-func NewUser(u *entity.User) *User {
+func ToUser(u *entity.User) *User {
 	return &User{u}
 }
 
-func NewUserNodes(us entity.Users) []node {
-	res := make([]node, 0, len(us))
+func ToUsers(us entity.Users) []*User {
+	res := make([]*User, 0, len(us))
 	for _, u := range us {
-		res = append(res, NewUser(u))
+		res = append(res, ToUser(u))
 	}
 	return res
 }

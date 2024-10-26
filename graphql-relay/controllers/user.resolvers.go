@@ -21,7 +21,7 @@ func (r *mutationResolver) AddUser(ctx context.Context, input model.AddUserInput
 		slog.Error("failed to create user", "err", err)
 		return nil, err
 	}
-	return &model.AddUserPayload{ID: presenter.EncodeGraphqlID(presenter.NodeTypeUser, id)}, nil
+	return &model.AddUserPayload{ID: graph.EncodeGraphqlID(presenter.NodeTypeUser, id)}, nil
 }
 
 // Users is the resolver for the users field.
@@ -29,14 +29,14 @@ func (r *queryResolver) Users(ctx context.Context, first *int, after *string, la
 	var afterCursor, beforeCursor *string
 
 	if after != nil {
-		_, id, err := presenter.DecodeGraphqlID(*after)
+		_, id, err := graph.DecodeGraphqlID(*after)
 		if err != nil {
 			return nil, err
 		}
 		afterCursor = &id
 	}
 	if before != nil {
-		_, id, err := presenter.DecodeGraphqlID(*before)
+		_, id, err := graph.DecodeGraphqlID(*before)
 		if err != nil {
 			return nil, err
 		}
@@ -47,7 +47,7 @@ func (r *queryResolver) Users(ctx context.Context, first *int, after *string, la
 		slog.Error("failed to get users", "err", err)
 		return nil, err
 	}
-	return presenter.NewConnection(presenter.NewUserNodes(res.Users), res.HasNextPage, res.HasPreviousPage), nil
+	return presenter.NewConnection(presenter.ToUsers(res.Users), res.HasNextPage, res.HasPreviousPage), nil
 }
 
 // Cards is the resolver for the cards field.
