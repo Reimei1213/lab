@@ -27,6 +27,7 @@ func (p *Pager) InitIterator(ctx context.Context, tableName string) error {
 		return err
 	}
 	p.iterator = it
+	p.pageToken = ""
 	return nil
 }
 

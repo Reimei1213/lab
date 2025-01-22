@@ -11,7 +11,7 @@ import (
 func main() {
 	const (
 		projectID = ""
-		tableID   = ""
+		tableName = ""
 	)
 
 	ctx := context.Background()
@@ -22,7 +22,7 @@ func main() {
 	defer cli.Close()
 
 	p := pager.NewPager(cli)
-	if err := p.InitIterator(ctx, tableID); err != nil {
+	if err := p.InitIterator(ctx, tableName); err != nil {
 		panic(err)
 	}
 

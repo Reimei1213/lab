@@ -12,7 +12,10 @@ import (
 )
 
 func main() {
-	const projectID = "test"
+	const (
+		projectID = "test"
+		tableName = "test.dataset1.table_a"
+	)
 
 	// bigquery-emulator サーバを起動
 
@@ -45,7 +48,7 @@ func main() {
 	defer cli.Close()
 
 	p := pager.NewPager(cli)
-	if err := p.InitIterator(ctx, "test.dataset1.table_a"); err != nil {
+	if err := p.InitIterator(ctx, tableName); err != nil {
 		panic(err)
 	}
 
