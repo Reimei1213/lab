@@ -28,14 +28,14 @@ func main() {
 
 	pageSize := 2
 	for {
-		rows, nextPageToken, err := p.GetDataPage(ctx, pageSize)
+		rows, err := p.GetDataPage(ctx, pageSize)
 		if err != nil {
 			panic(err)
 		}
 		for _, r := range rows {
 			fmt.Println(r)
 		}
-		if nextPageToken == "" {
+		if p.GetPageToken() == "" {
 			break
 		}
 	}

@@ -35,16 +35,17 @@ func (p *Pager) InitIterator(ctx context.Context, tableName string) error {
 	を設定するとネットワーク上のやり取りを観察でき、
 	NextPage の実行ごとにリクエストを送ってそう
 */
-func (p *Pager) GetDataPage(
-	_ context.Context,
-	pageSize int,
-) ([][]bigquery.Value, string, error) {
+func (p *Pager) GetDataPage(_ context.Context, pageSize int) ([][]bigquery.Value, error) {
 	var rows [][]bigquery.Value
 	pager := iterator.NewPager(p.iterator, pageSize, p.pageToken)
 	nextToken, err := pager.NextPage(&rows)
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 	p.pageToken = nextToken
-	return rows, nextToken, nil
+	return rows, nil
+}
+
+func (p *Pager) GetPageToken() string {
+	return p.pageToken
 }
