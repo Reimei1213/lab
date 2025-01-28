@@ -6,9 +6,10 @@ import (
 	"path/filepath"
 
 	"cloud.google.com/go/bigquery"
-	"github.com/Reimei1213/lab/paging-bigquery/pager"
 	"github.com/goccy/bigquery-emulator/server"
 	"google.golang.org/api/option"
+
+	"github.com/Reimei1213/lab/paging-bigquery/pager"
 )
 
 func main() {
@@ -53,7 +54,7 @@ func main() {
 	}
 
 	// エミュレータを使用する場合、保存しているデータピッタリの値を設定しないとエラーになる
-	pageSize := 3
+	pageSize := 1
 	for {
 		rows, err := p.GetDataPage(ctx, pageSize)
 		if err != nil {

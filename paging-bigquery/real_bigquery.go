@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/bigquery"
+
 	"github.com/Reimei1213/lab/paging-bigquery/pager"
 )
 
